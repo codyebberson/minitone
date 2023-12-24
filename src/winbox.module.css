@@ -1,0 +1,39 @@
+.frame {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 300px;
+  height: 300px;
+  border-top: 3px solid #bbb;
+  border-left: 3px solid #bbb;
+  border-right: 3px solid #888;
+  border-bottom: 3px solid #888;
+  cursor: nesw-resize;
+}
+
+.titleBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  padding: 4px;
+  background: #24a;
+  border-bottom: 2px solid #888;
+  color: white;
+  user-select: none;
+  font-size: 12px;
+  line-height: 12px;
+  cursor: move;
+}
+
+.body {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #222;
+  color: white;
+  cursor: default;
+}
