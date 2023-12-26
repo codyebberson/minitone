@@ -30,7 +30,7 @@ masterGainNode.gain.value = 0.8;
 
 export function createAudioBuffer(duration: number): AudioBuffer {
   const samples = (duration * SAMPLE_RATE) | 0;
-  console.log("CODY samples", samples);
+  console.log('CODY samples', samples);
   return audioCtx.createBuffer(2, samples, SAMPLE_RATE);
 }
 
@@ -53,10 +53,8 @@ const [impulseL, impulseR] = getAudioBufferData(impulse);
 const reverbLength = impulseL.length;
 const decay = 5;
 for (let i = 0; i < reverbLength; i++) {
-  impulseL[i] =
-    0.25 * (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLength, decay);
-  impulseR[i] =
-    0.25 * (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLength, decay);
+  impulseL[i] = 0.25 * (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLength, decay);
+  impulseR[i] = 0.25 * (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLength, decay);
 }
 
 /** Reverb convolver. */
@@ -263,8 +261,7 @@ const addNote = (
     voice.frequency = voice.frequency || targetFreq;
 
     // Glide the frequency
-    voice.frequency =
-      glideRate * targetFreq + (1 - glideRate) * voice.frequency;
+    voice.frequency = glideRate * targetFreq + (1 - glideRate) * voice.frequency;
     voice.phi += voice.frequency / SAMPLE_RATE;
 
     // Apply envelope before or after the filter?
@@ -305,42 +302,42 @@ const addNote = (
   }
 };
 
-/**
- * Applies a low-pass filter to the given audio buffer.
- * @param data The audio buffer.
- * @param filter The filter type.
- * @param filterFreq The filter frequency in Hz.
- * @param filterRes The filter resonance.
- */
-export const applyFilter = (
-  data: Float32Array,
-  filter: number,
-  filterFreq: number,
-  filterRes: number
-): void => {
-  let low = 0;
-  let band = 0;
-  for (let i = 0; i < data.length; i++) {
-    let sample = data[i];
-    const f = 1.5 * Math.sin((filterFreq * Math.PI) / SAMPLE_RATE);
-    low += f * band;
-    const high = filterRes * (sample - band) - low;
-    band += f * high;
-    if (filter === FILTER_HIPASS) {
-      sample = high;
-    }
-    if (filter === FILTER_LOPASS) {
-      sample = low;
-    }
-    if (filter === FILTER_BANDPASS) {
-      sample = band;
-    }
-    if (filter === FILTER_NOTCH) {
-      sample = low + high;
-    }
-    data[i] = sample;
-  }
-};
+// /**
+//  * Applies a low-pass filter to the given audio buffer.
+//  * @param data The audio buffer.
+//  * @param filter The filter type.
+//  * @param filterFreq The filter frequency in Hz.
+//  * @param filterRes The filter resonance.
+//  */
+// export const applyFilter = (
+//   data: Float32Array,
+//   filter: number,
+//   filterFreq: number,
+//   filterRes: number
+// ): void => {
+//   let low = 0;
+//   let band = 0;
+//   for (let i = 0; i < data.length; i++) {
+//     let sample = data[i];
+//     const f = 1.5 * Math.sin((filterFreq * Math.PI) / SAMPLE_RATE);
+//     low += f * band;
+//     const high = filterRes * (sample - band) - low;
+//     band += f * high;
+//     if (filter === FILTER_HIPASS) {
+//       sample = high;
+//     }
+//     if (filter === FILTER_LOPASS) {
+//       sample = low;
+//     }
+//     if (filter === FILTER_BANDPASS) {
+//       sample = band;
+//     }
+//     if (filter === FILTER_NOTCH) {
+//       sample = low + high;
+//     }
+//     data[i] = sample;
+//   }
+// };
 
 /**
  * Generates an audio buffer with the given instrument, note, and duration.
@@ -358,11 +355,7 @@ export const generateAudioBuffer = (
     sequences: [{ instrument, notes: [{ baseFrequency, start: 0, duration }] }],
   });
 
-export const playSong = (
-  song: Song,
-  loopStart?: number,
-  reverb?: boolean
-): AudioBufferSourceNode =>
+export const playSong = (song: Song, loopStart?: number, reverb?: boolean): AudioBufferSourceNode =>
   playAudioBuffer(generateSong(song), loopStart, reverb);
 
 export const generateSong = (song: Song): AudioBuffer => {
@@ -370,13 +363,10 @@ export const generateSong = (song: Song): AudioBuffer => {
   song.sequences.forEach((sequence) =>
     sequence.notes.forEach(
       (note) =>
-        (endTime = Math.max(
-          endTime,
-          note.start + note.duration + sequence.instrument.release
-        ))
+        (endTime = Math.max(endTime, note.start + note.duration + sequence.instrument.release))
     )
   );
-  console.log("endTime", endTime);
+  console.log('endTime', endTime);
   // const samples = endTime * SAMPLE_RATE;
   // const audioBuffer = audioCtx.createBuffer(2, samples, SAMPLE_RATE);
   // const data = [audioBuffer.getChannelData(0), audioBuffer.getChannelData(1)];
@@ -396,16 +386,7 @@ export const addSequence = (data: Float32Array[], sequence: Sequence): void => {
     voices.push(createVoice(1 / (1 + i * instrument.detune), Math.random()));
   }
   for (const { baseFrequency, start, duration, glide } of notes) {
-    addVoicedNote(
-      data,
-      instrument,
-      voices,
-      start,
-      duration,
-      baseFrequency,
-      volume,
-      glide
-    );
+    addVoicedNote(data, instrument, voices, start, duration, baseFrequency, volume, glide);
   }
 };
 
@@ -421,16 +402,7 @@ const addVoicedNote = (
 ): void => {
   let i = 0;
   for (const voice of voices) {
-    addNote(
-      data,
-      instr,
-      voice,
-      start,
-      duration,
-      midi,
-      i === 0 ? volume * 4 : volume,
-      glide
-    );
+    addNote(data, instr, voice, start, duration, midi, i === 0 ? volume * 4 : volume, glide);
     i++;
   }
 };
@@ -476,8 +448,8 @@ export function playAudioBuffer(
   // source.loopStart = 13.355;
   // // source.loopEnd = 13.355 + 20;
   // source.loopEnd = 31;
-  console.log("loop?", source.loop);
-  console.log("loopStart", source.loopStart);
-  console.log("reverb", reverb);
+  console.log('loop?', source.loop);
+  console.log('loopStart', source.loopStart);
+  console.log('reverb', reverb);
   return source;
 }

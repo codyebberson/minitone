@@ -1,4 +1,6 @@
-# minitone
+# Minitone
+
+![Minitone](public/cover.png)
 
 ## Links
 
